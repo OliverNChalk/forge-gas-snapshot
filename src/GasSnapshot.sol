@@ -25,7 +25,6 @@ contract GasSnapshot is Script {
     string private cachedName;
 
     constructor() {
-        _mkdirp(SNAP_DIR);
         try vm.envBool(CHECK_ENV_VAR) returns (bool _check) {
             check = _check;
         } catch {
@@ -122,15 +121,6 @@ contract GasSnapshot is Script {
     /// @notice Write the new snapshot value to file
     function _writeSnapshot(string memory name, uint256 gasUsed) private {
         vm.writeFile(_getSnapFile(name), vm.toString(gasUsed));
-    }
-
-    /// @notice Make the directory for snapshots
-    function _mkdirp(string memory dir) private {
-        string[] memory mkdirp = new string[](3);
-        mkdirp[0] = "mkdir";
-        mkdirp[1] = "-p";
-        mkdirp[2] = dir;
-        vm.ffi(mkdirp);
     }
 
     /// @notice Get the snapshot file name
